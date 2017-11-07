@@ -6,7 +6,7 @@ Needs["FiniteFields`"]
 p=2
 irred={1,1,0,0,1}
 field=GF[p,irred]
-auto=1
+m=2
 d=Length[irred]-1
 
 ipoly=FieldIrreducible[field,w]
