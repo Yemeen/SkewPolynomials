@@ -27,7 +27,7 @@ ExpFP[p1_,exp_]:=ElementToPolynomial[ReduceElement[PolynomialToElement[field,Pol
 AddP[v1_,v2_]:=Map[Function[x,ElementToPolynomial[ReduceElement[PolynomialToElement[field,PolynomialMod[x,ipoly]]],w]],If[Length[v1]<Length[v2],Join[v1,Table[0,{i,Length[v2]-Length[v1]}]]+v2,v1+Join[v2,Table[0,{i,Length[v1]-Length[v2]}]]]]
 
 
-MultP[v1_,v2_]:=Map[Function[x,PolynomialMod[x,ipoly]],If[Length[v1]<Length[v2],vect=KroneckerProduct[Join[v1,Table[0,{i,Length[v2]-Length[v1]}]],v2];For[i=0,i<Length[vect],i++,vect[[i+1]]=Join[Table[0,i],vect[[i+1]]]];vect,vect=KroneckerProduct[v1,Join[v2,Table[0,{i,Length[v1]-Length[v2]}]]];For[i=0,i<Length[vect],i++,vect[[i+1]]=Join[Table[0,i],vect[[i+1]]]];vect]]
+MultP[v1_,v2_]:=Map[Function[x,ElementToPolynomial[ReduceElement[PolynomialToElement[field,PolynomialMod[x,ipoly]]],w]],vector=Table[0,{i,Length[v1]+Length[v2]-1}];For[j=1,j<=Length[v2],j++,For[i=1,i<=Length[v1],i++,vector[[j+i-1]]=vector[[j+i-1]]+v1[[i]]*v2[[j]]]];vector]
 
 
 InvFP[p1_]:= ExpFP[p1,p^m-2]
