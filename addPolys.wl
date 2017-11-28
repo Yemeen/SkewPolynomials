@@ -1,4 +1,4 @@
-(* ::Package::*)
+(* ::Package:: *)
 
 Needs["FiniteFields`"]
 
@@ -43,7 +43,7 @@ FrobFP[p1_]:=ExpFP[p1,p]
 ThetaFP[p1_]:=Nest[FrobFP,p1,m]
 
 
-ThetanFP[p1_,n_]:=Nest[ThetaFP,p1,Mod[n,ordertheta]]
+ThetanFP[p1_,n_]:=If[n==0,SimplifyFP[p1],Nest[ThetaFP,p1,Mod[n,ordertheta]]]
 
 
 ThetaP[v1_]:=Map[ThetaFP,v1]
