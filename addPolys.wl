@@ -58,4 +58,4 @@ ThetaP[v1_]:=DropExtra[Map[ThetaFP,v1]]
 ThetanP[v1_,n_]:=DropExtra[Map[Function[x,ThetanFP[x,n]],v1]]
 
 
-RightDivide[num_,den_]:=(tempdiv=num;ret=Table[0,{i,Length[num]-Length[den]+1}];For[i=1,i<=Length[ret],i++,ret[[Length[tempdiv]-Length[den]+1]]=ThetanFP[Last[tempdiv]*InvFP[Last[den]],ordertheta-Length[den]+1];tempdiv=SubP[tempdiv,MultP[den,ret[[1;;Length[tempdiv]-Length[den]+1]]]]];Return[{ret,tempdiv}])
+RightDivide[num_,den_]:=(remainder=num;ret=Table[0,{i,Length[num]-Length[den]+1}];For[i=1,i<Length[num]-Length[den]+2,i++,(check=i;ret[[Length[remainder]-Length[den]+1]]=ThetanFP[Last[remainder]*InvFP[Last[den]],ordertheta-Length[den]+1];remainder=SubP[remainder,MultP[den,ret[[1;;-i]]]];i=check;)];Return[{ret,remainder}])
