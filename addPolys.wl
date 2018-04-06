@@ -6,25 +6,24 @@ p = 2;
 irred = {1, 1, 1};
 (*Finite fields package field*)
 field = GF[p, irred];
-(*Extension of the field*)
+(*Automorphism Theta = Frobenius to this power*)
 m = 1;
-(*Order of the multiplicative field*)
+(*Degree of the extension field*)
 d = Length[irred] - 1;
-(*Order of multiplicative field*)
+(*Order of Theta in the automorphism group*)
 ordertheta = d/GCD[d, m];
-(**)
+(*irred as a polynomial in w*)
 ipoly = FieldIrreducible[field, w];
 
 (*Simplify polynomials under current field*)
 SimplifyFP[
   p1_] := (ele = 
-   ReduceElement[
-    PolynomialToElement[field, PolynomialMod[p1, ipoly]]]; 
+   ReduceElement[PolynomialToElement[field, PolynomialMod[p1, ipoly]]];
   Return[If[ele == 0, 0, "Error: Nonzero integer produced", 
     ElementToPolynomial[ele, w]]])
 
 (*Removes leading zeros from vector inputs*)
-DropExtra[v1_] := (temp = v1; 
+DropExtra[v1_] := (temp = v1;
   For[i = Length[v1], i > 1, i--, 
    If[Last[temp] == 0, temp = Most[temp], Return[temp]]]; Return[temp])
 
@@ -59,11 +58,11 @@ SubP[v1_, v2_] := AddP[v1, -1*v2]
 MultP[v1_, v2_] := 
  DropExtra[
   Map[Function[x, SimplifyFP[x]], 
-   vector = Table[0, {i, Length[v1] + Length[v2] - 1}]; 
+   vector = Table[0, {i, Length[v1] + Length[v2] - 1}];
    For[j = 1, j <= Length[v2], j++, 
     For[i = 1, i <= Length[v1], i++, 
      vector[[j + i - 1]] = 
-      vector[[j + i - 1]] + v1[[i]]*ThetanFP[v2[[j]], i - 1]]]; 
+      vector[[j + i - 1]] + v1[[i]]*ThetanFP[v2[[j]], i - 1]]];
    vector]]
 
 (*Returns inverse of field polynomial*)
@@ -86,12 +85,11 @@ ThetaP[v1_] := DropExtra[Map[ThetaFP, v1]]
 ThetanP[v1_, n_] := DropExtra[Map[Function[x, ThetanFP[x, n]], v1]]
 
 (*Divides two polynomials on the right side*)
-RightDivide[num_, den_] := (remainder = num; 
-  ret = Table[0, {i, Length[num] - Length[den] + 1}]; 
-  For[i = 1, i < Length[num] - Length[den] + 2, 
-   i++, (check = i; 
+RightDivide[num_, den_] := (remainder = num;
+  ret = Table[0, {i, Length[num] - Length[den] + 1}];
+  For[i = 1, i < Length[num] - Length[den] + 2, i++, (check = i;
     ret[[Length[remainder] - Length[den] + 1]] = 
      ThetanFP[Last[remainder]*InvFP[Last[den]], 
-      ordertheta - Length[den] + 1]; 
-    remainder = SubP[remainder, MultP[den, ret[[1 ;; -i]]]]; 
+      ordertheta - Length[den] + 1];
+    remainder = SubP[remainder, MultP[den, ret[[1 ;; -i]]]];
     i = check;)]; Return[{ret, remainder}])
